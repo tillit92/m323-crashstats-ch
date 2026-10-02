@@ -49,7 +49,10 @@ describe("F1 Daten einlesen", () => {
   });
 });
 
-describe.each(filters)("V1 und V2 mit Filter %o", (filter) => {
+/** Filter mit lesbarem Ort für die Testnamen. */
+const cases = filters.map((filter) => ({ filter, place: filter.canton ?? "ganze Schweiz" }));
+
+describe.each(cases)("V1 und V2, $filter.fromYear bis $filter.toYear, $place", ({ filter }) => {
   const filteredV1 = engineV1.filterAccidents(accidentsV1, filter);
   const filteredV2 = engineV2.filterAccidents(accidentsV2, filter);
   const reportV1 = engineV1.buildReport(filteredV1, filter);

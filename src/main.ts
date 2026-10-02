@@ -74,6 +74,21 @@ const update = (): void => {
     `${formatNumber(accidents.length)} Unfälle, ${place}. Berechnet mit ${labels[version]} in ${Math.round(duration)} ms.`;
 };
 
+/**
+ * Übernimmt eine Auswahl aus der Adresse, z.B. ?version=v1&von=2020&bis=2025&kanton=BS.
+ * So lassen sich V1.0 und V2.0 mit derselben Auswahl direkt aufrufen.
+ */
+const applyUrlParams = (): void => {
+  const params = new URLSearchParams(window.location.search);
+  const version = params.get("version");
+  if (version === "v1" || version === "v2") {
+    (document.getElementById(`engine-${version}`) as HTMLInputElement).checked = true;
+  }
+  if (params.has("von")) fromSelect.value = params.get("von")!;
+  if (params.has("bis")) toSelect.value = params.get("bis")!;
+  if (params.has("kanton")) cantonSelect.value = params.get("kanton")!.toUpperCase();
+};
+
 /** Lädt die Daten und startet die Seite. */
 const init = async (): Promise<void> => {
   fillYears(fromSelect, FIRST_YEAR);
@@ -95,6 +110,7 @@ const init = async (): Promise<void> => {
   const cantons = [...new Set(parsed.get("v2")!.map(({ canton }) => canton))].sort();
   cantons.forEach((code) => cantonSelect.add(new Option(`${cantonName(code)} (${code})`, code)));
 
+  applyUrlParams();
   page.setAttribute("aria-busy", "false");
   controls.addEventListener("change", update);
   window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", update);
