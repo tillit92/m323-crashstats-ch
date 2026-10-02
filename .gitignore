@@ -1,0 +1,16 @@
+# Abhängigkeiten und Build
+node_modules/
+dist/
+coverage/
+
+# Projektantrag und Dokumentation (nicht im Repo)
+docs/
+*.md
+*.docx
+*.pdf
+
+# System
+.DS_Store
+
+# Lokale Werkzeuge
+.claude/

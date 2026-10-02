@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="de-CH">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Auswertung der Strassenverkehrsunfälle mit Personenschaden in der Schweiz, 2016 bis 2025." />
+    <title>CrashStats CH</title>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <h1>CrashStats CH</h1>
+        <p>Strassenverkehrsunfälle mit Personenschaden in der Schweiz</p>
+      </div>
+
+      <form class="controls" id="controls" aria-label="Auswahl">
+        <div class="field">
+          <label for="from-year">Von</label>
+          <select id="from-year" name="from-year"></select>
+        </div>
+        <div class="field">
+          <label for="to-year">Bis</label>
+          <select id="to-year" name="to-year"></select>
+        </div>
+        <div class="field field-wide">
+          <label for="canton">Kanton</label>
+          <select id="canton" name="canton">
+            <option value="">Ganze Schweiz</option>
+          </select>
+        </div>
+        <fieldset class="field">
+          <legend>Version</legend>
+          <div class="segmented" role="radiogroup">
+            <input type="radio" id="engine-v1" name="engine" value="v1" />
+            <label for="engine-v1">V1.0 imperativ</label>
+            <input type="radio" id="engine-v2" name="engine" value="v2" checked />
+            <label for="engine-v2">V2.0 funktional</label>
+          </div>
+        </fieldset>
+      </form>
+    </header>
+
+    <main class="page" id="page" aria-busy="true">
+      <p class="status" id="status" role="status">Daten werden geladen.</p>
+
+      <section class="kpis" id="kpis" aria-label="Zusammenfassung"></section>
+
+      <div class="grid">
+        <section class="panel span-2">
+          <h2>Unfälle pro Jahr nach Schwere</h2>
+          <div class="chart chart-tall"><canvas id="chart-years" aria-label="Unfälle pro Jahr"></canvas></div>
+          <div class="table-wrap" id="table-years"></div>
+        </section>
+
+        <section class="panel">
+          <h2>Kantonsvergleich</h2>
+          <p class="hint">Anzahl Unfälle und Anteil schwerer Unfälle</p>
+          <ol class="ranking" id="list-cantons"></ol>
+        </section>
+
+        <section class="panel span-2">
+          <h2>Unfälle pro Stunde</h2>
+          <div class="chart"><canvas id="chart-hours" aria-label="Unfälle pro Stunde"></canvas></div>
+          <h3>Zeitfenster mit den meisten Unfällen</h3>
+          <ol class="slots" id="list-slots"></ol>
+        </section>
+
+        <section class="panel">
+          <h2>Beteiligte</h2>
+          <p class="hint">Anteil der Unfälle in Prozent</p>
+          <div class="chart"><canvas id="chart-participants" aria-label="Beteiligte pro Jahr"></canvas></div>
+        </section>
+
+        <section class="panel span-3">
+          <h2>Schwere nach Unfalltyp</h2>
+          <p class="hint">Anteil der Unfälle mit Getöteten oder Schwerverletzten, Typen mit mindestens 100 Unfällen</p>
+          <ol class="ranking ranking-types" id="list-types"></ol>
+        </section>
+      </div>
+
+      <footer class="source">
+        Quelle: Bundesamt für Strassen ASTRA, Strassenverkehrsunfälle mit Personenschaden (opendata.swiss).
+        M323 Projekt von Til Stegmüller und Leandro Fragale.
+      </footer>
+    </main>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

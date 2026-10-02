@@ -1,0 +1,519 @@
+/**
+ * styles.css
+ *
+ * Gestaltung von CrashStats CH. Farben und Formen gemäss DESIGN.md,
+ * mit Hell- und Dunkelmodus über CSS Variablen.
+ *
+ * @author  Til Stegmüller, Leandro Fragale
+ * @version 2.0
+ */
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
+
+:root {
+  color-scheme: light dark;
+  --canvas: #fafafa;
+  --surface: #ffffff;
+  --ink: #171717;
+  --body: #4d4d4d;
+  --mute: #6b6b6b;
+  --hairline: #e7e7e7;
+  --accent: #c8302a;
+  --accent-deep: #8f1c17;
+  --neutral-series: #b5b5b5;
+  --focus: rgb(200 48 42 / 0.35);
+
+  --radius-panel: 12px;
+  --radius-control: 8px;
+  --font-sans: "Geist Variable", system-ui, -apple-system, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, Menlo, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --canvas: #0f0f10;
+    --surface: #17171a;
+    --ink: #ededed;
+    --body: #b4b4b4;
+    --mute: #949494;
+    --hairline: #2a2a2e;
+    --accent: #f0574d;
+    --accent-deep: #ff9c94;
+    --neutral-series: #5c5c63;
+    --focus: rgb(240 87 77 / 0.4);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--body);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  color: var(--ink);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Kopfzeile mit Auswahl */
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 16px 32px;
+  padding: 16px 32px;
+  background: color-mix(in srgb, var(--canvas) 88%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.brand h1 {
+  font-size: 22px;
+  font-weight: 650;
+  letter-spacing: -0.03em;
+}
+
+.brand p {
+  margin: 2px 0 0;
+  color: var(--mute);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: end;
+}
+
+.field {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 92px;
+}
+
+.field-wide {
+  min-width: 180px;
+}
+
+.field label,
+.field legend {
+  padding: 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--mute);
+}
+
+select {
+  height: 36px;
+  padding: 0 32px 0 12px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-control);
+  background: var(--surface)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23888' stroke-width='1.5'/%3E%3C/svg%3E")
+    no-repeat right 12px center;
+  color: var(--ink);
+  font: inherit;
+  appearance: none;
+  cursor: pointer;
+}
+
+select:focus-visible,
+.segmented input:focus-visible + label {
+  outline: 3px solid var(--focus);
+  outline-offset: 1px;
+}
+
+.segmented {
+  display: flex;
+  height: 36px;
+  padding: 3px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+}
+
+.segmented input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.segmented label {
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  border-radius: 5px;
+  color: var(--body);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.segmented input:checked + label {
+  background: var(--ink);
+  color: var(--canvas);
+}
+
+.segmented label:active {
+  transform: scale(0.98);
+}
+
+/* Seite */
+
+.page {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 24px 32px 48px;
+}
+
+.status {
+  margin: 0 0 16px;
+  color: var(--mute);
+}
+
+.status.error {
+  color: var(--accent);
+}
+
+/* F7 Kennzahlen */
+
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin-bottom: 24px;
+  border-top: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.kpi {
+  padding: 16px 20px 18px 0;
+}
+
+.kpi + .kpi {
+  padding-left: 20px;
+  border-left: 1px solid var(--hairline);
+}
+
+.kpi dt {
+  color: var(--mute);
+  font-size: 13px;
+}
+
+.kpi dd {
+  margin: 4px 0 0;
+  color: var(--ink);
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+.kpi dd small {
+  display: block;
+  margin-top: 2px;
+  color: var(--mute);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.kpi dd.word {
+  font-family: var(--font-sans);
+}
+
+.kpi-accent dd {
+  color: var(--accent);
+}
+
+/* Raster mit Panels */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.panel {
+  min-width: 0;
+  padding: 20px 20px 16px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+}
+
+.span-2 {
+  grid-column: span 2;
+}
+
+.span-3 {
+  grid-column: span 3;
+}
+
+.panel h2 {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.panel h3 {
+  margin-top: 16px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.hint {
+  margin: 2px 0 12px;
+  color: var(--mute);
+  font-size: 13px;
+}
+
+.chart {
+  position: relative;
+  height: 220px;
+  margin-top: 12px;
+}
+
+.chart-tall {
+  height: 260px;
+}
+
+/* F2 Tabelle */
+
+.table-wrap {
+  margin-top: 16px;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+th {
+  padding: 6px 8px;
+  color: var(--mute);
+  font-weight: 500;
+  text-align: right;
+  border-bottom: 1px solid var(--hairline);
+}
+
+td {
+  padding: 5px 8px;
+  color: var(--ink);
+  text-align: right;
+}
+
+th:first-child,
+td:first-child {
+  text-align: left;
+  padding-left: 0;
+}
+
+.up {
+  color: var(--accent);
+}
+
+.down {
+  color: var(--mute);
+}
+
+/* F3 und F6 Ranglisten */
+
+.ranking {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-height: 520px;
+  overflow-y: auto;
+}
+
+.ranking li {
+  display: grid;
+  grid-template-columns: 22px 44px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+}
+
+.ranking .rank {
+  color: var(--mute);
+  font-size: 12px;
+}
+
+.ranking .key {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.bar {
+  height: 8px;
+  border-radius: 2px;
+  background: var(--neutral-series);
+}
+
+.bar.accent {
+  background: var(--accent);
+}
+
+.ranking .value {
+  min-width: 112px;
+  color: var(--ink);
+  text-align: right;
+}
+
+.ranking .value small {
+  color: var(--mute);
+}
+
+.ranking li.selected .key,
+.ranking li.selected .value {
+  color: var(--accent);
+}
+
+.ranking-types {
+  columns: 2;
+  column-gap: 40px;
+  max-height: none;
+}
+
+.ranking-types li {
+  break-inside: avoid;
+}
+
+.ranking-types li {
+  grid-template-columns: 22px minmax(150px, 1.2fr) 1fr auto;
+}
+
+.ranking-types .key {
+  font-weight: 500;
+}
+
+/* F4 Zeitfenster */
+
+.slots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.slots li {
+  padding: 6px 10px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-control);
+  color: var(--ink);
+}
+
+.slots li .num {
+  margin-left: 6px;
+  color: var(--mute);
+}
+
+.slots li:first-child {
+  border-color: var(--accent);
+}
+
+/* Lade- und Leerzustand */
+
+.skeleton {
+  background: var(--hairline);
+  border-radius: 4px;
+  min-height: 1em;
+}
+
+.page[aria-busy="true"] .chart,
+.page[aria-busy="true"] .ranking,
+.page[aria-busy="true"] .kpis {
+  opacity: 0.4;
+}
+
+.empty {
+  padding: 24px 0;
+  color: var(--mute);
+}
+
+.source {
+  margin-top: 32px;
+  color: var(--mute);
+  font-size: 12px;
+}
+
+/* Mobile */
+
+@media (max-width: 1024px) {
+  .kpis {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .kpi:nth-child(4) {
+    padding-left: 0;
+    border-left: 0;
+  }
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .span-2,
+  .span-3 {
+    grid-column: auto;
+  }
+  .ranking-types {
+    columns: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .topbar {
+    position: static;
+    grid-template-columns: minmax(0, 1fr);
+    padding: 16px;
+  }
+  .page {
+    padding: 16px 16px 40px;
+  }
+  .kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .kpi,
+  .kpi + .kpi {
+    padding: 12px 0;
+    border-left: 0;
+  }
+  .ranking li,
+  .ranking-types li {
+    grid-template-columns: 22px minmax(0, 1fr) auto;
+  }
+  .ranking .bar {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}

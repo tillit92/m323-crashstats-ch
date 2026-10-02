@@ -1,0 +1,27 @@
+{
+  "name": "crashstats-ch",
+  "version": "2.0.0",
+  "description": "M323 Projekt: Auswertung der Strassenverkehrsunfälle in der Schweiz, imperativ (V1.0) und funktional (V2.0)",
+  "author": "Til Stegmüller, Leandro Fragale",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "prepare-data": "node scripts/prepare-data.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/geist": "^5.3.0",
+    "@fontsource-variable/geist-mono": "^5.3.0",
+    "chart.js": "^4.5.1"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.2",
+    "vitest": "^5.0.3"
+  }
+}
