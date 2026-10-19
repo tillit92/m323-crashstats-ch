@@ -188,7 +188,7 @@ const buildTypes = (accidents: readonly Accident[]): readonly GroupRow[] =>
 /** F4: Anzahl Unfälle pro Stunde 0 bis 23. */
 const buildHours = (accidents: readonly Accident[]): readonly number[] =>
   accidents.reduce<readonly number[]>(
-    (hours, { hour }) => hours.with(hour, hours[hour]! + 1),
+    (hours, { hour }) => hours.with(hour, hours[hour] + 1),
     range(0, 23).map(() => 0),
   );
 

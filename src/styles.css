@@ -1,8 +1,7 @@
 /**
  * styles.css
  *
- * Gestaltung von CrashStats CH. Farben und Formen gemäss DESIGN.md,
- * mit Hell- und Dunkelmodus über CSS Variablen.
+ * Gestaltung von CrashStats CH mit Hell- und Dunkelmodus über CSS Variablen.
  *
  * @author  Til Stegmüller, Leandro Fragale
  * @version 2.0
@@ -423,12 +422,6 @@ td:first-child {
 
 .slots li:first-child {
   border-color: var(--accent);
-}
-
-.skeleton {
-  background: var(--hairline);
-  border-radius: 4px;
-  min-height: 1em;
 }
 
 .page[aria-busy="true"] .chart,

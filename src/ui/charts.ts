@@ -22,7 +22,7 @@ Chart.register(BarController, BarElement, CategoryScale, LinearScale, LineContro
 const cssColor = (name: string): string =>
   getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
-/** Aktuelle Farben gemäss DESIGN.md. */
+/** Aktuelle Farben aus den CSS Variablen. */
 const palette = () => ({
   ink: cssColor("--ink"),
   mute: cssColor("--mute"),

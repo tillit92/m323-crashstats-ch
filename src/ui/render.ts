@@ -24,16 +24,17 @@ const byId = (id: string): HTMLElement => {
 const renderKpis = (report: Report, filter: Filter): void => {
   const { total, fatal, topMonth, topWeekday, topCanton } = report.summary;
   const period = filter.fromYear === filter.toYear ? `${filter.fromYear}` : `${filter.fromYear} bis ${filter.toYear}`;
-  const kpi = (label: string, value: string, note: string, accent = false) => {
-    const kind = /^[\d'’]+$/.test(value) ? "num" : "word";
-    return `<dl class="kpi${accent ? " kpi-accent" : ""}"><dt>${label}</dt><dd class="${kind}">${value}<small>${note}</small></dd></dl>`;
+  const kpi = (label: string, value: number | string, note: string, accent = false) => {
+    const content = typeof value === "number" ? formatNumber(value) : value;
+    const kind = typeof value === "number" ? "num" : "word";
+    return `<dl class="kpi${accent ? " kpi-accent" : ""}"><dt>${label}</dt><dd class="${kind}">${content}<small>${note}</small></dd></dl>`;
   };
 
   byId("kpis").innerHTML = [
-    kpi("Unfälle", formatNumber(total), period),
-    kpi("mit Getöteten", formatNumber(fatal), total ? `${formatPercent((fatal * 100) / total)} aller Unfälle` : "", true),
-    kpi("Spitzenmonat", topMonth ? MONTHS[Number(topMonth.key) - 1]! : "", topMonth ? `${formatNumber(topMonth.count)} Unfälle` : ""),
-    kpi("Spitzentag", topWeekday ? WEEKDAYS[Number(topWeekday.key) - 1]! : "", topWeekday ? `${formatNumber(topWeekday.count)} Unfälle` : ""),
+    kpi("Unfälle", total, period),
+    kpi("mit Getöteten", fatal, total ? `${formatPercent((fatal * 100) / total)} aller Unfälle` : "", true),
+    kpi("Spitzenmonat", topMonth ? MONTHS[Number(topMonth.key) - 1] : "", topMonth ? `${formatNumber(topMonth.count)} Unfälle` : ""),
+    kpi("Spitzentag", topWeekday ? WEEKDAYS[Number(topWeekday.key) - 1] : "", topWeekday ? `${formatNumber(topWeekday.count)} Unfälle` : ""),
     kpi(filter.canton ? "Kanton" : "Meiste Unfälle", topCanton ? String(topCanton.key) : "", topCanton ? cantonName(String(topCanton.key)) : ""),
   ].join("");
 };

@@ -77,17 +77,17 @@ function parseLine(line: string): Accident | null {
     return null;
   }
 
-  let canton = fields[0]!;
-  let year = readInteger(fields[1]!);
-  let month = readInteger(fields[2]!);
-  let weekday = readInteger(fields[3]!);
-  let hour = readInteger(fields[4]!);
-  let severity = fields[5]!;
-  let type = fields[6]!;
-  let roadType = fields[7]!;
-  let pedestrian = fields[8]!;
-  let bicycle = fields[9]!;
-  let motorcycle = fields[10]!;
+  let canton = fields[0];
+  let year = readInteger(fields[1]);
+  let month = readInteger(fields[2]);
+  let weekday = readInteger(fields[3]);
+  let hour = readInteger(fields[4]);
+  let severity = fields[5];
+  let type = fields[6];
+  let roadType = fields[7];
+  let pedestrian = fields[8];
+  let bicycle = fields[9];
+  let motorcycle = fields[10];
 
   if (canton === "" || type === "" || roadType === "") {
     return null;
@@ -129,7 +129,7 @@ function parseAccidents(csv: string): Accident[] {
   let lines = csv.split("\n");
   let accidents: Accident[] = [];
   for (let i = 1; i < lines.length; i++) {
-    let line = lines[i]!;
+    let line = lines[i];
     if (line.endsWith("\r")) {
       line = line.slice(0, -1);
     }
@@ -150,7 +150,7 @@ function parseAccidents(csv: string): Accident[] {
 function filterAccidents(accidents: readonly Accident[], filter: Filter): Accident[] {
   let result: Accident[] = [];
   for (let i = 0; i < accidents.length; i++) {
-    let accident = accidents[i]!;
+    let accident = accidents[i];
     if (accident.year < filter.fromYear || accident.year > filter.toYear) {
       continue;
     }
@@ -179,30 +179,30 @@ function buildYears(accidents: readonly Accident[], filter: Filter): YearRow[] {
   }
 
   for (let i = 0; i < accidents.length; i++) {
-    let accident = accidents[i]!;
+    let accident = accidents[i];
     let index = accident.year - filter.fromYear;
     if (accident.severity === "as1") {
-      fatal[index]!++;
+      fatal[index]++;
     } else if (accident.severity === "as2") {
-      severe[index]!++;
+      severe[index]++;
     } else {
-      light[index]!++;
+      light[index]++;
     }
   }
 
   let rows: YearRow[] = [];
   let previousTotal = 0;
   for (let i = 0; i < yearCount; i++) {
-    let total = fatal[i]! + severe[i]! + light[i]!;
+    let total = fatal[i] + severe[i] + light[i];
     let changePct: number | null = null;
     if (i > 0 && previousTotal > 0) {
       changePct = Math.round(((total - previousTotal) * 1000) / previousTotal) / 10;
     }
     rows.push({
       year: filter.fromYear + i,
-      fatal: fatal[i]!,
-      severe: severe[i]!,
-      light: light[i]!,
+      fatal: fatal[i],
+      severe: severe[i],
+      light: light[i],
       total: total,
       changePct: changePct,
     });
@@ -223,7 +223,7 @@ function countGroups(accidents: readonly Accident[], byCanton: boolean): GroupRo
   let serious: number[] = [];
 
   for (let i = 0; i < accidents.length; i++) {
-    let accident = accidents[i]!;
+    let accident = accidents[i];
     let key = byCanton ? accident.canton : accident.type;
 
     let index = -1;
@@ -240,19 +240,19 @@ function countGroups(accidents: readonly Accident[], byCanton: boolean): GroupRo
       index = keys.length - 1;
     }
 
-    totals[index]!++;
+    totals[index]++;
     if (accident.severity !== "as3") {
-      serious[index]!++;
+      serious[index]++;
     }
   }
 
   let rows: GroupRow[] = [];
   for (let k = 0; k < keys.length; k++) {
     rows.push({
-      key: keys[k]!,
-      total: totals[k]!,
-      serious: serious[k]!,
-      seriousPct: percent(serious[k]!, totals[k]!),
+      key: keys[k],
+      total: totals[k],
+      serious: serious[k],
+      seriousPct: percent(serious[k], totals[k]),
     });
   }
   return rows;
@@ -266,10 +266,10 @@ function countGroups(accidents: readonly Accident[], byCanton: boolean): GroupRo
 function buildCantons(accidents: readonly Accident[]): GroupRow[] {
   let rows = countGroups(accidents, true);
   for (let i = 1; i < rows.length; i++) {
-    let current = rows[i]!;
+    let current = rows[i];
     let j = i - 1;
     while (j >= 0) {
-      let other = rows[j]!;
+      let other = rows[j];
       let otherComesFirst = other.total > current.total
         || (other.total === current.total && compareText(other.key, current.key) <= 0);
       if (otherComesFirst) {
@@ -293,16 +293,16 @@ function buildTypes(accidents: readonly Accident[]): GroupRow[] {
 
   let rows: GroupRow[] = [];
   for (let i = 0; i < all.length; i++) {
-    if (all[i]!.total >= MIN_TYPE_COUNT) {
-      rows.push(all[i]!);
+    if (all[i].total >= MIN_TYPE_COUNT) {
+      rows.push(all[i]);
     }
   }
 
   for (let i = 1; i < rows.length; i++) {
-    let current = rows[i]!;
+    let current = rows[i];
     let j = i - 1;
     while (j >= 0) {
-      let other = rows[j]!;
+      let other = rows[j];
       let otherComesFirst = other.seriousPct > current.seriousPct
         || (other.seriousPct === current.seriousPct && other.total > current.total)
         || (other.seriousPct === current.seriousPct && other.total === current.total
@@ -318,7 +318,7 @@ function buildTypes(accidents: readonly Accident[]): GroupRow[] {
 
   let top: GroupRow[] = [];
   for (let i = 0; i < rows.length && i < TOP_TYPES; i++) {
-    top.push(rows[i]!);
+    top.push(rows[i]);
   }
   return top;
 }
@@ -334,7 +334,7 @@ function buildHours(accidents: readonly Accident[]): number[] {
     hours.push(0);
   }
   for (let i = 0; i < accidents.length; i++) {
-    hours[accidents[i]!.hour]!++;
+    hours[accidents[i].hour]++;
   }
   return hours;
 }
@@ -350,8 +350,8 @@ function buildTopSlots(accidents: readonly Accident[]): TimeSlot[] {
     counts.push(0);
   }
   for (let i = 0; i < accidents.length; i++) {
-    let accident = accidents[i]!;
-    counts[(accident.weekday - 1) * 24 + accident.hour]!++;
+    let accident = accidents[i];
+    counts[(accident.weekday - 1) * 24 + accident.hour]++;
   }
 
   let top: TimeSlot[] = [];
@@ -366,7 +366,7 @@ function buildTopSlots(accidents: readonly Accident[]): TimeSlot[] {
       if (used[i] || counts[i] === 0) {
         continue;
       }
-      if (best === -1 || counts[i]! > counts[best]!) {
+      if (best === -1 || counts[i] > counts[best]) {
         best = i;
       }
     }
@@ -377,7 +377,7 @@ function buildTopSlots(accidents: readonly Accident[]): TimeSlot[] {
     top.push({
       weekday: Math.floor(best / 24) + 1,
       hour: best % 24,
-      count: counts[best]!,
+      count: counts[best],
     });
   }
   return top;
@@ -402,17 +402,17 @@ function buildParticipants(accidents: readonly Accident[], filter: Filter): Part
   }
 
   for (let i = 0; i < accidents.length; i++) {
-    let accident = accidents[i]!;
+    let accident = accidents[i];
     let index = accident.year - filter.fromYear;
-    totals[index]!++;
+    totals[index]++;
     if (accident.pedestrian) {
-      pedestrians[index]!++;
+      pedestrians[index]++;
     }
     if (accident.bicycle) {
-      bicycles[index]!++;
+      bicycles[index]++;
     }
     if (accident.motorcycle) {
-      motorcycles[index]!++;
+      motorcycles[index]++;
     }
   }
 
@@ -420,9 +420,9 @@ function buildParticipants(accidents: readonly Accident[], filter: Filter): Part
   for (let i = 0; i < yearCount; i++) {
     rows.push({
       year: filter.fromYear + i,
-      pedestrianPct: percent(pedestrians[i]!, totals[i]!),
-      bicyclePct: percent(bicycles[i]!, totals[i]!),
-      motorcyclePct: percent(motorcycles[i]!, totals[i]!),
+      pedestrianPct: percent(pedestrians[i], totals[i]),
+      bicyclePct: percent(bicycles[i], totals[i]),
+      motorcyclePct: percent(motorcycles[i], totals[i]),
     });
   }
   return rows;
@@ -437,14 +437,14 @@ function buildParticipants(accidents: readonly Accident[], filter: Filter): Part
 function findPeak(counts: number[], offset: number): Peak | null {
   let best = -1;
   for (let i = 0; i < counts.length; i++) {
-    if (counts[i]! > 0 && (best === -1 || counts[i]! > counts[best]!)) {
+    if (counts[i] > 0 && (best === -1 || counts[i] > counts[best])) {
       best = i;
     }
   }
   if (best === -1) {
     return null;
   }
-  return { key: best + offset, count: counts[best]! };
+  return { key: best + offset, count: counts[best] };
 }
 
 /**
@@ -464,17 +464,17 @@ function buildSummary(accidents: readonly Accident[], cantons: GroupRow[]): Summ
   }
 
   for (let i = 0; i < accidents.length; i++) {
-    let accident = accidents[i]!;
+    let accident = accidents[i];
     if (accident.severity === "as1") {
       fatal++;
     }
-    months[accident.month - 1]!++;
-    weekdays[accident.weekday - 1]!++;
+    months[accident.month - 1]++;
+    weekdays[accident.weekday - 1]++;
   }
 
   let topCanton: Peak | null = null;
   if (cantons.length > 0) {
-    topCanton = { key: cantons[0]!.key, count: cantons[0]!.total };
+    topCanton = { key: cantons[0].key, count: cantons[0].total };
   }
 
   return {
