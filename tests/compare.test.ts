@@ -36,12 +36,12 @@ describe("F1 Daten einlesen", () => {
     const sample = [
       "canton,year,month,weekday,hour,severity,type,roadType,pedestrian,bicycle,motorcycle",
       "BS,2024,3,5,17,as3,Auffahrunfall,Hauptstrasse,false,true,false",
-      "BS,2024,13,5,17,as3,Auffahrunfall,Hauptstrasse,false,true,false", // Monat 13
-      "BS,2024,3,5,24,as3,Auffahrunfall,Hauptstrasse,false,true,false", // Stunde 24
-      "BS,2024,3,5,17,as9,Auffahrunfall,Hauptstrasse,false,true,false", // Schwere
-      "BS,2024,3,5,17,as3,Auffahrunfall,Hauptstrasse,nein,true,false", // kein Boolean
-      ",2024,3,5,17,as3,Auffahrunfall,Hauptstrasse,false,true,false", // kein Kanton
-      "BS,2024,3",                                                      // zu wenige Felder
+      "BS,2024,13,5,17,as3,Auffahrunfall,Hauptstrasse,false,true,false",
+      "BS,2024,3,5,24,as3,Auffahrunfall,Hauptstrasse,false,true,false",
+      "BS,2024,3,5,17,as9,Auffahrunfall,Hauptstrasse,false,true,false",
+      "BS,2024,3,5,17,as3,Auffahrunfall,Hauptstrasse,nein,true,false",
+      ",2024,3,5,17,as3,Auffahrunfall,Hauptstrasse,false,true,false",
+      "BS,2024,3",
       "",
     ].join("\n");
     expect(engineV1.parseAccidents(sample)).toHaveLength(1);

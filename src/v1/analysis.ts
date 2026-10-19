@@ -16,10 +16,6 @@ import {
   type Peak, type Report, type Severity, type Summary, type TimeSlot, type YearRow,
 } from "../types";
 
-/* ------------------------------------------------------------------ */
-/* Hilfsfunktionen                                                    */
-/* ------------------------------------------------------------------ */
-
 /**
  * Berechnet einen Anteil in Prozent, gerundet auf eine Nachkommastelle.
  * @param part  Teilmenge
@@ -69,10 +65,6 @@ function compareText(a: string, b: string): number {
   }
   return 0;
 }
-
-/* ------------------------------------------------------------------ */
-/* F1: Daten einlesen und filtern                                     */
-/* ------------------------------------------------------------------ */
 
 /**
  * Wandelt eine CSV Zeile in einen Unfall um.
@@ -170,10 +162,6 @@ function filterAccidents(accidents: readonly Accident[], filter: Filter): Accide
   return result;
 }
 
-/* ------------------------------------------------------------------ */
-/* F2: Jahresübersicht                                                */
-/* ------------------------------------------------------------------ */
-
 /**
  * F2: Zählt die Unfälle pro Jahr nach Schwere und berechnet die Veränderung zum Vorjahr.
  * @param accidents gefilterte Unfälle
@@ -222,10 +210,6 @@ function buildYears(accidents: readonly Accident[], filter: Filter): YearRow[] {
   }
   return rows;
 }
-
-/* ------------------------------------------------------------------ */
-/* F3 und F6: Gruppen mit Anteil schwerer Unfälle                     */
-/* ------------------------------------------------------------------ */
 
 /**
  * Zählt Unfälle und schwere Unfälle (as1, as2) pro Kanton oder pro Unfalltyp.
@@ -339,10 +323,6 @@ function buildTypes(accidents: readonly Accident[]): GroupRow[] {
   return top;
 }
 
-/* ------------------------------------------------------------------ */
-/* F4: Tageszeiten                                                    */
-/* ------------------------------------------------------------------ */
-
 /**
  * F4: Zählt die Unfälle pro Stunde (0 bis 23).
  * @param accidents gefilterte Unfälle
@@ -365,7 +345,6 @@ function buildHours(accidents: readonly Accident[]): number[] {
  * @param accidents gefilterte Unfälle
  */
 function buildTopSlots(accidents: readonly Accident[]): TimeSlot[] {
-  // Zähler für 7 Wochentage mal 24 Stunden
   let counts: number[] = [];
   for (let i = 0; i < 7 * 24; i++) {
     counts.push(0);
@@ -381,7 +360,6 @@ function buildTopSlots(accidents: readonly Accident[]): TimeSlot[] {
     used.push(false);
   }
 
-  // Wiederholt das grösste noch nicht gewählte Zeitfenster suchen
   for (let round = 0; round < TOP_SLOTS; round++) {
     let best = -1;
     for (let i = 0; i < counts.length; i++) {
@@ -404,10 +382,6 @@ function buildTopSlots(accidents: readonly Accident[]): TimeSlot[] {
   }
   return top;
 }
-
-/* ------------------------------------------------------------------ */
-/* F5: Verkehrsteilnehmer                                             */
-/* ------------------------------------------------------------------ */
 
 /**
  * F5: Anteil der Unfälle mit Fussgänger-, Velo- und Motorradbeteiligung pro Jahr.
@@ -453,10 +427,6 @@ function buildParticipants(accidents: readonly Accident[], filter: Filter): Part
   }
   return rows;
 }
-
-/* ------------------------------------------------------------------ */
-/* F7: Zusammenfassung                                                */
-/* ------------------------------------------------------------------ */
 
 /**
  * Sucht in einem Zähler-Array den Index mit dem grössten Wert.

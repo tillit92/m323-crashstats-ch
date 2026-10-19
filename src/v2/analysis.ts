@@ -17,10 +17,6 @@ import {
   type Peak, type Report, type Severity, type Summary, type TimeSlot, type YearRow,
 } from "../types";
 
-/* ------------------------------------------------------------------ */
-/* Allgemeine funktionale Bausteine                                   */
-/* ------------------------------------------------------------------ */
-
 /** Eine Bedingung für ein Element. */
 type Predicate<T> = (item: T) => boolean;
 /** Vergleichsfunktion für toSorted. */
@@ -75,10 +71,6 @@ const keep = <T>(predicate: Predicate<T>) => (items: readonly T[]): readonly T[]
 /** Nimmt die ersten n Elemente. */
 const take = (n: number) => <T>(items: readonly T[]): readonly T[] => items.slice(0, n);
 
-/* ------------------------------------------------------------------ */
-/* Bedingungen für Unfälle                                            */
-/* ------------------------------------------------------------------ */
-
 const hasSeverity = (severity: Severity): Predicate<Accident> => (accident) => accident.severity === severity;
 const isFatal = hasSeverity("as1");
 const isSevere = hasSeverity("as2");
@@ -88,10 +80,6 @@ const isSerious: Predicate<Accident> = (accident) => !isLight(accident);
 const inYears = (from: number, to: number): Predicate<Accident> => ({ year }) => year >= from && year <= to;
 const inCanton = (canton: string | null): Predicate<Accident> => (accident) =>
   canton === null || accident.canton === canton;
-
-/* ------------------------------------------------------------------ */
-/* F1: Daten einlesen und filtern                                     */
-/* ------------------------------------------------------------------ */
 
 const isInteger = (text: string): boolean => text !== "" && Number.isInteger(Number(text));
 const isIntegerBetween = (min: number, max: number) => (text: string): boolean =>
@@ -152,10 +140,6 @@ const parseAccidents = (csv: string): readonly Accident[] =>
 const filterAccidents = (accidents: readonly Accident[], { fromYear, toYear, canton }: Filter): readonly Accident[] =>
   accidents.filter(inYears(fromYear, toYear)).filter(inCanton(canton));
 
-/* ------------------------------------------------------------------ */
-/* F2: Jahresübersicht                                                */
-/* ------------------------------------------------------------------ */
-
 /** Veränderung in Prozent zum Vorjahr, null wenn es kein (oder ein leeres) Vorjahr gibt. */
 const changeTo = (previous: number | undefined, current: number): number | null =>
   previous === undefined || previous === 0 ? null : Math.round(((current - previous) * 1000) / previous) / 10;
@@ -175,10 +159,6 @@ const buildYears = (accidents: readonly Accident[], { fromYear, toYear }: Filter
   });
   return counts.map((row, i) => ({ ...row, changePct: changeTo(counts[i - 1]?.total, row.total) }));
 };
-
-/* ------------------------------------------------------------------ */
-/* F3 und F6: Gruppen mit Anteil schwerer Unfälle                     */
-/* ------------------------------------------------------------------ */
 
 /** Gruppiert Unfälle nach einem Schlüssel und zählt total und schwere Unfälle pro Gruppe. */
 const groupRows = (keyOf: (accident: Accident) => string) => (accidents: readonly Accident[]): readonly GroupRow[] =>
@@ -205,10 +185,6 @@ const buildTypes = (accidents: readonly Accident[]): readonly GroupRow[] =>
     take(TOP_TYPES),
   )(groupRows(({ type }) => type)(accidents));
 
-/* ------------------------------------------------------------------ */
-/* F4: Tageszeiten                                                    */
-/* ------------------------------------------------------------------ */
-
 /** F4: Anzahl Unfälle pro Stunde 0 bis 23. */
 const buildHours = (accidents: readonly Accident[]): readonly number[] =>
   accidents.reduce<readonly number[]>(
@@ -229,10 +205,6 @@ const buildTopSlots = (accidents: readonly Accident[]): readonly TimeSlot[] => {
   )([...bySlot].map(([slot, group]) => ({ weekday: Math.floor(slot / 24) + 1, hour: slot % 24, count: group.length })));
 };
 
-/* ------------------------------------------------------------------ */
-/* F5: Verkehrsteilnehmer                                             */
-/* ------------------------------------------------------------------ */
-
 /** F5: Anteil der Unfälle mit Fussgängern, Velos und Motorrädern pro Jahr. */
 const buildParticipants = (accidents: readonly Accident[], { fromYear, toYear }: Filter): readonly ParticipantRow[] => {
   const byYear = Map.groupBy(accidents, ({ year }) => year);
@@ -249,10 +221,6 @@ const buildParticipants = (accidents: readonly Accident[], { fromYear, toYear }:
     };
   });
 };
-
-/* ------------------------------------------------------------------ */
-/* F7: Zusammenfassung                                                */
-/* ------------------------------------------------------------------ */
 
 /**
  * Sucht unter den möglichen Schlüsseln den mit den meisten Unfällen.

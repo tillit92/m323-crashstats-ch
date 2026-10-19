@@ -56,7 +56,7 @@ for await (const rawLine of lines) {
     get("CantonCode"),
     year,
     Number(get("AccidentMonth")),
-    Number(get("AccidentWeekDay").slice(-1)), // aw401 = Montag ... aw407 = Sonntag
+    Number(get("AccidentWeekDay").slice(-1)),
     Number(get("AccidentHour")),
     get("AccidentSeverityCategory"),
     get("AccidentType_de"),

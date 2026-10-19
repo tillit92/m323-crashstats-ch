@@ -69,8 +69,6 @@ h1, h2, h3 {
   font-variant-numeric: tabular-nums;
 }
 
-/* Kopfzeile mit Auswahl */
-
 .topbar {
   position: sticky;
   top: 0;
@@ -181,8 +179,6 @@ select:focus-visible,
   transform: scale(0.98);
 }
 
-/* Seite */
-
 .page {
   max-width: 1320px;
   margin: 0 auto;
@@ -197,8 +193,6 @@ select:focus-visible,
 .status.error {
   color: var(--accent);
 }
-
-/* F7 Kennzahlen */
 
 .kpis {
   display: grid;
@@ -249,8 +243,6 @@ select:focus-visible,
   color: var(--accent);
 }
 
-/* Raster mit Panels */
-
 .grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -300,8 +292,6 @@ select:focus-visible,
   height: 260px;
 }
 
-/* F2 Tabelle */
-
 .table-wrap {
   margin-top: 16px;
   overflow-x: auto;
@@ -340,8 +330,6 @@ td:first-child {
 .down {
   color: var(--mute);
 }
-
-/* F3 und F6 Ranglisten */
 
 .ranking {
   margin: 0;
@@ -412,8 +400,6 @@ td:first-child {
   font-weight: 500;
 }
 
-/* F4 Zeitfenster */
-
 .slots {
   display: flex;
   flex-wrap: wrap;
@@ -439,8 +425,6 @@ td:first-child {
   border-color: var(--accent);
 }
 
-/* Lade- und Leerzustand */
-
 .skeleton {
   background: var(--hairline);
   border-radius: 4px;
@@ -463,8 +447,6 @@ td:first-child {
   color: var(--mute);
   font-size: 12px;
 }
-
-/* Mobile */
 
 @media (max-width: 1024px) {
   .kpis {
