@@ -76,30 +76,33 @@ const draw = <T extends ChartType>(id: string, config: ChartConfiguration<T>): v
 };
 
 /**
- * F2: Zeichnet gestapelte Säulen pro Jahr nach Schwere.
+ * F2: Zeichnet ein Liniendiagramm mit einer Linie pro Unfallschwere.
  * @param report berechneter Report
  */
 const drawYears = (report: Report): void => {
   const colors = palette();
+  const line = (label: string, data: number[], color: string) => ({
+    label, data, borderColor: color, backgroundColor: color, borderWidth: 2, pointRadius: 3, tension: 0.25,
+  });
   draw("chart-years", {
-    type: "bar",
+    type: "line",
     data: {
       labels: report.years.map(({ year }) => String(year)),
       datasets: [
-        { label: "Leichtverletzte", data: report.years.map(({ light }) => light), backgroundColor: colors.neutral },
-        { label: "Schwerverletzte", data: report.years.map(({ severe }) => severe), backgroundColor: colors.accent },
-        { label: "Getötete", data: report.years.map(({ fatal }) => fatal), backgroundColor: colors.accentDeep },
+        line("Leichtverletzte", report.years.map(({ light }) => light), colors.neutral),
+        line("Schwerverletzte", report.years.map(({ severe }) => severe), colors.accent),
+        line("Getötete", report.years.map(({ fatal }) => fatal), colors.accentDeep),
       ],
     },
     options: {
+      interaction: { mode: "index", intersect: false },
       scales: {
-        x: { stacked: true, grid: { display: false } },
-        y: { stacked: true, ticks: { callback: (value) => formatNumber(Number(value)) } },
+        x: { grid: { display: false } },
+        y: { beginAtZero: true, ticks: { callback: (value) => formatNumber(Number(value)) } },
       },
       plugins: {
         tooltip: { callbacks: { label: (item) => ` ${item.dataset.label}: ${formatNumber(Number(item.raw))}` } },
       },
-      datasets: { bar: { borderRadius: 2, maxBarThickness: 44 } },
     },
   });
 };
