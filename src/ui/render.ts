@@ -10,17 +10,30 @@
 import type { Filter, GroupRow, Report } from "../types";
 import { cantonName, formatChange, formatNumber, formatPercent, MONTHS, WEEKDAYS, WEEKDAYS_SHORT } from "./format";
 
-/** Ersetzt Sonderzeichen, damit Texte sicher ins HTML eingefügt werden können. */
+/**
+ * Ersetzt Sonderzeichen, damit Texte sicher ins HTML eingefügt werden können.
+ * @param text beliebiger Text
+ * @returns Text mit ersetzten Sonderzeichen
+ */
 const escapeHtml = (text: string): string =>
   text.replace(/[&<>"']/g, (char) => `&#${char.charCodeAt(0)};`);
 
+/**
+ * Sucht ein Element der Seite über seine ID.
+ * @param id ID des Elements
+ * @returns das Element, sonst wird ein Fehler geworfen
+ */
 const byId = (id: string): HTMLElement => {
   const element = document.getElementById(id);
   if (!element) throw new Error(`Element #${id} fehlt`);
   return element;
 };
 
-/** F7: Kennzahlen oberhalb der Panels. */
+/**
+ * F7: Zeigt die Kennzahlen oberhalb der Panels an.
+ * @param report berechneter Report
+ * @param filter gewählter Zeitraum und Kanton
+ */
 const renderKpis = (report: Report, filter: Filter): void => {
   const { total, fatal, topMonth, topWeekday, topCanton } = report.summary;
   const period = filter.fromYear === filter.toYear ? `${filter.fromYear}` : `${filter.fromYear} bis ${filter.toYear}`;
@@ -39,7 +52,10 @@ const renderKpis = (report: Report, filter: Filter): void => {
   ].join("");
 };
 
-/** F2: Tabelle der Jahre mit Veränderung zum Vorjahr. */
+/**
+ * F2: Zeigt die Tabelle der Jahre mit Veränderung zum Vorjahr an.
+ * @param report berechneter Report
+ */
 const renderYearTable = (report: Report): void => {
   const rows = report.years.map((row) => {
     const trend = row.changePct === null ? "" : row.changePct > 0 ? "up" : "down";
@@ -65,6 +81,7 @@ const renderYearTable = (report: Report): void => {
  * @param label     Beschriftung des Schlüssels
  * @param value     Wert rechts
  * @param selected  Schlüssel, der hervorgehoben wird
+ * @returns HTML der Listeneinträge
  */
 const ranking = (
   rows: readonly GroupRow[],
@@ -84,7 +101,11 @@ const ranking = (
     </li>`).join("");
 };
 
-/** F3: Kantone nach Anzahl Unfällen. */
+/**
+ * F3: Zeigt die Rangliste der Kantone an.
+ * @param report berechneter Report
+ * @param filter gewählter Kanton wird hervorgehoben
+ */
 const renderCantons = (report: Report, filter: Filter): void => {
   byId("list-cantons").innerHTML = ranking(
     report.cantons,
@@ -95,7 +116,10 @@ const renderCantons = (report: Report, filter: Filter): void => {
   );
 };
 
-/** F4: Zeitfenster mit den meisten Unfällen. */
+/**
+ * F4: Zeigt die Zeitfenster mit den meisten Unfällen an.
+ * @param report berechneter Report
+ */
 const renderSlots = (report: Report): void => {
   byId("list-slots").innerHTML = report.topSlots.length
     ? report.topSlots
@@ -104,7 +128,10 @@ const renderSlots = (report: Report): void => {
     : `<li class="empty">Keine Unfälle in dieser Auswahl.</li>`;
 };
 
-/** F6: Unfalltypen nach Anteil schwerer Unfälle. */
+/**
+ * F6: Zeigt die Unfalltypen nach Anteil schwerer Unfälle an.
+ * @param report berechneter Report
+ */
 const renderTypes = (report: Report): void => {
   byId("list-types").innerHTML = ranking(
     report.types,
@@ -114,7 +141,11 @@ const renderTypes = (report: Report): void => {
   );
 };
 
-/** Schreibt alle Textauswertungen eines Reports in die Seite. */
+/**
+ * Schreibt alle Textauswertungen eines Reports in die Seite.
+ * @param report berechneter Report
+ * @param filter gewählter Zeitraum und Kanton
+ */
 export const renderReport = (report: Report, filter: Filter): void => {
   renderKpis(report, filter);
   renderYearTable(report);

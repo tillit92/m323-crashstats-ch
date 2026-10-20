@@ -47,6 +47,7 @@ function readInteger(text: string): number {
  * @param value Zahl
  * @param min   untere Grenze
  * @param max   obere Grenze
+ * @returns true, wenn die Zahl im Bereich liegt
  */
 function isInRange(value: number, min: number, max: number): boolean {
   return value >= min && value <= max;
@@ -54,6 +55,8 @@ function isInRange(value: number, min: number, max: number): boolean {
 
 /**
  * Vergleicht zwei Texte nach Zeichencode.
+ * @param a erster Text
+ * @param b zweiter Text
  * @returns negativ, wenn a vor b kommt, positiv, wenn a nach b kommt, sonst 0
  */
 function compareText(a: string, b: string): number {
@@ -166,6 +169,7 @@ function filterAccidents(accidents: readonly Accident[], filter: Filter): Accide
  * F2: Zählt die Unfälle pro Jahr nach Schwere und berechnet die Veränderung zum Vorjahr.
  * @param accidents gefilterte Unfälle
  * @param filter    gewählter Zeitraum (jedes Jahr erscheint, auch ohne Unfälle)
+ * @returns eine Zeile pro Jahr
  */
 function buildYears(accidents: readonly Accident[], filter: Filter): YearRow[] {
   let yearCount = filter.toYear - filter.fromYear + 1;
@@ -262,6 +266,7 @@ function countGroups(accidents: readonly Accident[], byCanton: boolean): GroupRo
  * F3: Kantone sortiert nach Anzahl Unfällen (absteigend), bei Gleichstand nach Kürzel.
  * Sortiert wird mit Insertion Sort.
  * @param accidents gefilterte Unfälle
+ * @returns eine Zeile pro Kanton
  */
 function buildCantons(accidents: readonly Accident[]): GroupRow[] {
   let rows = countGroups(accidents, true);
@@ -285,8 +290,9 @@ function buildCantons(accidents: readonly Accident[]): GroupRow[] {
 
 /**
  * F6: Unfalltypen mit mindestens MIN_TYPE_COUNT Unfällen, sortiert nach Anteil
- * schwerer Unfälle (absteigend), danach nach Anzahl und Name. Liefert die ersten TOP_TYPES.
+ * schwerer Unfälle (absteigend), danach nach Anzahl und Name.
  * @param accidents gefilterte Unfälle
+ * @returns die ersten TOP_TYPES Unfalltypen
  */
 function buildTypes(accidents: readonly Accident[]): GroupRow[] {
   let all = countGroups(accidents, false);
@@ -343,6 +349,7 @@ function buildHours(accidents: readonly Accident[]): number[] {
  * F4: Die TOP_SLOTS Zeitfenster (Wochentag und Stunde) mit den meisten Unfällen.
  * Bei Gleichstand gewinnt der frühere Wochentag, danach die frühere Stunde.
  * @param accidents gefilterte Unfälle
+ * @returns die ersten TOP_SLOTS Zeitfenster
  */
 function buildTopSlots(accidents: readonly Accident[]): TimeSlot[] {
   let counts: number[] = [];
@@ -387,6 +394,7 @@ function buildTopSlots(accidents: readonly Accident[]): TimeSlot[] {
  * F5: Anteil der Unfälle mit Fussgänger-, Velo- und Motorradbeteiligung pro Jahr.
  * @param accidents gefilterte Unfälle
  * @param filter    gewählter Zeitraum
+ * @returns eine Zeile pro Jahr
  */
 function buildParticipants(accidents: readonly Accident[], filter: Filter): ParticipantRow[] {
   let yearCount = filter.toYear - filter.fromYear + 1;
@@ -433,6 +441,7 @@ function buildParticipants(accidents: readonly Accident[], filter: Filter): Part
  * Bei Gleichstand gewinnt der kleinere Index.
  * @param counts Zähler
  * @param offset Wert, der zum Index addiert wird (z.B. 1 für Monat 1 bis 12)
+ * @returns Spitzenwert oder null, wenn alle Zähler 0 sind
  */
 function findPeak(counts: number[], offset: number): Peak | null {
   let best = -1;
@@ -451,6 +460,7 @@ function findPeak(counts: number[], offset: number): Peak | null {
  * F7: Total, Unfälle mit Getöteten sowie unfallreichster Monat, Wochentag und Kanton.
  * @param accidents gefilterte Unfälle
  * @param cantons   bereits berechnete und sortierte Kantone aus F3
+ * @returns die Zusammenfassung
  */
 function buildSummary(accidents: readonly Accident[], cantons: GroupRow[]): Summary {
   let fatal = 0;
@@ -490,6 +500,7 @@ function buildSummary(accidents: readonly Accident[], cantons: GroupRow[]): Summ
  * F2 bis F7: Berechnet alle Auswertungen für die gefilterten Unfälle.
  * @param accidents bereits gefilterte Unfälle
  * @param filter    gewählter Zeitraum und Kanton
+ * @returns der vollständige Report
  */
 function buildReport(accidents: readonly Accident[], filter: Filter): Report {
   let cantons = buildCantons(accidents);
@@ -504,7 +515,7 @@ function buildReport(accidents: readonly Accident[], filter: Filter): Report {
   };
 }
 
-/** Version 1.0 (imperativ) */
+/** Version 1.0 (imperativ): setzt die Schnittstelle Engine um. */
 export const engineV1: Engine = {
   parseAccidents: parseAccidents,
   filterAccidents: filterAccidents,

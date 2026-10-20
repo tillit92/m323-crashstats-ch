@@ -18,11 +18,18 @@ import { formatNumber, formatPercent } from "./format";
 
 Chart.register(BarController, BarElement, CategoryScale, LinearScale, LineController, LineElement, PointElement, Tooltip, Legend);
 
-/** Liest eine Farbe aus den CSS Variablen der Seite. */
+/**
+ * Liest eine Farbe aus den CSS Variablen der Seite.
+ * @param name Name der Variable, z.B. --accent
+ * @returns Farbwert
+ */
 const cssColor = (name: string): string =>
   getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
-/** Aktuelle Farben aus den CSS Variablen. */
+/**
+ * Liest die aktuellen Farben aus den CSS Variablen (Hell- oder Dunkelmodus).
+ * @returns Objekt mit allen Diagrammfarben
+ */
 const palette = () => ({
   ink: cssColor("--ink"),
   mute: cssColor("--mute"),
@@ -32,9 +39,10 @@ const palette = () => ({
   neutral: cssColor("--neutral-series"),
 });
 
+/** Systemeinstellung für reduzierte Bewegung. */
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-/** Grundeinstellungen, die für alle Diagramme gelten. */
+/** Setzt die Grundeinstellungen, die für alle Diagramme gelten. */
 const applyDefaults = (): void => {
   const colors = palette();
   Chart.defaults.font.family = getComputedStyle(document.body).fontFamily;
@@ -52,6 +60,7 @@ const applyDefaults = (): void => {
   Chart.defaults.plugins.tooltip.cornerRadius = 8;
 };
 
+/** Bereits gezeichnete Diagramme pro Canvas ID. */
 const charts = new Map<string, Chart>();
 
 /**
@@ -66,7 +75,10 @@ const draw = <T extends ChartType>(id: string, config: ChartConfiguration<T>): v
   charts.set(id, new Chart(canvas, config as ChartConfiguration));
 };
 
-/** F2: Gestapelte Säulen pro Jahr nach Schwere. */
+/**
+ * F2: Zeichnet gestapelte Säulen pro Jahr nach Schwere.
+ * @param report berechneter Report
+ */
 const drawYears = (report: Report): void => {
   const colors = palette();
   draw("chart-years", {
@@ -92,7 +104,10 @@ const drawYears = (report: Report): void => {
   });
 };
 
-/** F4: Säulen pro Stunde, die Spitzenstunde im Akzent. */
+/**
+ * F4: Zeichnet Säulen pro Stunde, die Spitzenstunde im Akzent.
+ * @param report berechneter Report
+ */
 const drawHours = (report: Report): void => {
   const colors = palette();
   const peak = Math.max(...report.hours);
@@ -120,7 +135,10 @@ const drawHours = (report: Report): void => {
   });
 };
 
-/** F5: Linien für den Anteil der Beteiligten pro Jahr. */
+/**
+ * F5: Zeichnet Linien für den Anteil der Beteiligten pro Jahr.
+ * @param report berechneter Report
+ */
 const drawParticipants = (report: Report): void => {
   const colors = palette();
   const line = (label: string, data: number[], color: string) => ({
@@ -148,7 +166,10 @@ const drawParticipants = (report: Report): void => {
   });
 };
 
-/** Zeichnet alle Diagramme für einen Report. */
+/**
+ * Zeichnet alle Diagramme für einen Report.
+ * @param report berechneter Report
+ */
 export const drawCharts = (report: Report): void => {
   applyDefaults();
   drawYears(report);

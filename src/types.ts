@@ -102,11 +102,25 @@ export interface Report {
 
 /** Schnittstelle, die V1.0 und V2.0 identisch umsetzen. */
 export interface Engine {
-  /** F1: CSV Text in Unfälle umwandeln, ungültige Zeilen verwerfen. */
+  /**
+   * F1: CSV Text in Unfälle umwandeln, ungültige Zeilen verwerfen.
+   * @param csv gesamter Dateiinhalt
+   * @returns alle gültigen Unfälle
+   */
   parseAccidents(csv: string): readonly Accident[];
-  /** F1: Unfälle nach Zeitraum und Kanton filtern. */
+  /**
+   * F1: Unfälle nach Zeitraum und Kanton filtern.
+   * @param accidents alle Unfälle
+   * @param filter    Zeitraum und Kanton
+   * @returns die passenden Unfälle
+   */
   filterAccidents(accidents: readonly Accident[], filter: Filter): readonly Accident[];
-  /** F2 bis F7: alle Auswertungen für die gefilterten Unfälle berechnen. */
+  /**
+   * F2 bis F7: alle Auswertungen für die gefilterten Unfälle berechnen.
+   * @param accidents bereits gefilterte Unfälle
+   * @param filter    Zeitraum und Kanton
+   * @returns der vollständige Report
+   */
   buildReport(accidents: readonly Accident[], filter: Filter): Report;
 }
 

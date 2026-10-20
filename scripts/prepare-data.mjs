@@ -17,7 +17,11 @@ const FIRST_YEAR = 2016;
 const LAST_YEAR = 2025;
 const OUTPUT = "public/data/unfaelle_ch.csv";
 
-/** Zerlegt eine CSV Zeile mit Anführungszeichen in ihre Felder. */
+/**
+ * Zerlegt eine CSV Zeile mit Anführungszeichen in ihre Felder.
+ * @param {string} line eine Zeile der Rohdatei
+ * @returns {string[]} die Felder der Zeile
+ */
 function splitCsvLine(line) {
   const fields = [];
   let current = "";

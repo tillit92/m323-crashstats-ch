@@ -16,15 +16,22 @@ import { drawCharts } from "./ui/charts";
 import { renderReport } from "./ui/render";
 import { cantonName, formatNumber } from "./ui/format";
 
+/** Pfad zur CSV Datei mit den Unfällen. */
 const DATA_URL = `${import.meta.env.BASE_URL}data/unfaelle_ch.csv`;
+/** Erstes auswählbares Jahr. */
 const FIRST_YEAR = 2016;
+/** Letztes auswählbares Jahr. */
 const LAST_YEAR = 2025;
 
+/** Kennung der Programmversion. */
 type Version = "v1" | "v2";
 
+/** Die beiden Programmversionen. */
 const engines: Readonly<Record<Version, Engine>> = { v1: engineV1, v2: engineV2 };
+/** Anzeigenamen der Versionen. */
 const labels: Readonly<Record<Version, string>> = { v1: "V1.0 imperativ", v2: "V2.0 funktional" };
 
+/** Elemente der Seite, die gelesen oder beschrieben werden. */
 const fromSelect = document.getElementById("from-year") as HTMLSelectElement;
 const toSelect = document.getElementById("to-year") as HTMLSelectElement;
 const cantonSelect = document.getElementById("canton") as HTMLSelectElement;
@@ -37,14 +44,21 @@ let csvText = "";
 /** Eingelesene Unfälle pro Version, damit jede Version ihr eigenes F1 ausführt. */
 const parsed = new Map<Version, readonly Accident[]>();
 
-/** Füllt eine Auswahlliste mit Jahren. */
+/**
+ * Füllt eine Auswahlliste mit den Jahren.
+ * @param select   Auswahlliste
+ * @param selected vorausgewähltes Jahr
+ */
 const fillYears = (select: HTMLSelectElement, selected: number): void => {
   for (let year = FIRST_YEAR; year <= LAST_YEAR; year++) {
     select.add(new Option(String(year), String(year), false, year === selected));
   }
 };
 
-/** Liest die aktuelle Auswahl aus dem Formular. */
+/**
+ * Liest die aktuelle Auswahl aus dem Formular.
+ * @returns Filter (Zeitraum und Kanton) und gewählte Version
+ */
 const readSelection = (): { filter: Filter; version: Version } => {
   const a = Number(fromSelect.value);
   const b = Number(toSelect.value);
