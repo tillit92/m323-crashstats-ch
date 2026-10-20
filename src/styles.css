@@ -346,6 +346,41 @@ td:first-child {
   padding: 5px 0;
 }
 
+.ranking-scroll {
+  padding-right: 10px;
+  transition: mask-image 150ms ease;
+}
+
+.ranking-scroll.has-more {
+  -webkit-mask-image: linear-gradient(to bottom, #000 85%, transparent);
+  mask-image: linear-gradient(to bottom, #000 85%, transparent);
+}
+
+.ranking-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.ranking-scroll::-webkit-scrollbar-track {
+  background: var(--hairline);
+  border-radius: 4px;
+}
+
+.ranking-scroll::-webkit-scrollbar-thumb {
+  background: var(--neutral-series);
+  border-radius: 4px;
+}
+
+.ranking-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--mute);
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  .ranking-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: var(--neutral-series) var(--hairline);
+  }
+}
+
 .ranking .rank {
   color: var(--mute);
   font-size: 12px;

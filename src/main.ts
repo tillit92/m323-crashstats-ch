@@ -13,7 +13,7 @@ import type { Accident, Engine, Filter } from "./types";
 import { engineV1 } from "./v1/analysis";
 import { engineV2 } from "./v2/analysis";
 import { drawCharts } from "./ui/charts";
-import { renderReport } from "./ui/render";
+import { renderReport, updateScrollHint } from "./ui/render";
 import { cantonName, formatNumber } from "./ui/format";
 
 /** Pfad zur CSV Datei mit den Unfällen. */
@@ -127,6 +127,8 @@ const init = async (): Promise<void> => {
   applyUrlParams();
   page.setAttribute("aria-busy", "false");
   controls.addEventListener("change", update);
+  const cantonList = document.getElementById("list-cantons") as HTMLElement;
+  cantonList.addEventListener("scroll", () => updateScrollHint(cantonList), { passive: true });
   window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", update);
   update();
 };

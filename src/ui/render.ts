@@ -102,18 +102,33 @@ const ranking = (
 };
 
 /**
+ * Blendet unten in einer scrollbaren Liste einen Verlauf ein, solange noch Einträge folgen.
+ * @param list scrollbare Liste
+ */
+export const updateScrollHint = (list: HTMLElement): void => {
+  list.classList.toggle("has-more", list.scrollTop + list.clientHeight < list.scrollHeight - 4);
+};
+
+/**
  * F3: Zeigt die Rangliste der Kantone an.
  * @param report berechneter Report
  * @param filter gewählter Kanton wird hervorgehoben
  */
 const renderCantons = (report: Report, filter: Filter): void => {
-  byId("list-cantons").innerHTML = ranking(
+  const count = report.cantons.length;
+  byId("hint-cantons").textContent = count > 1
+    ? `Alle ${count} Kantone: Anzahl Unfälle und Anteil schwerer Unfälle`
+    : "Anzahl Unfälle und Anteil schwerer Unfälle";
+  const list = byId("list-cantons");
+  list.innerHTML = ranking(
     report.cantons,
     (row) => row.total,
     (row) => row.key,
     (row) => `${formatNumber(row.total)} <small>${formatPercent(row.seriousPct)}</small>`,
     filter.canton,
   );
+  list.scrollTop = 0;
+  updateScrollHint(list);
 };
 
 /**
