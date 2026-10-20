@@ -11,6 +11,3 @@ docs/
 
 # System
 .DS_Store
-
-# Lokale Werkzeuge
-.claude/
